@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PROMTIKA Generator</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #00d9ff 0%, #ff1493 100%);
+    color: #f0f0f0;
+  }
+  header {
+    background-color: #1a1a2e;
+    padding: 16px;
+    color: #8ab4f8;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  nav {
+    background-color: #161625;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 0;
+  }
+  nav button {
+    background: none;
+    border: none;
+    color: #8ab4f8;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 8px 16px;
+  }
+  nav button.active {
+    border-bottom: 2px solid #ff1493;
+    color: #ff1493;
+    font-weight: bold;
+  }
+  main {
+    padding: 16px;
+    background-color: #25253f;
+    min-height: 80vh;
+    overflow-y: auto;
+  }
+  label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+    color: #d1d1e9;
+  }
+  select, input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: none;
+    margin-top: 4px;
+    background-color: #343464;
+    color: #f0f0f0;
+  }
+  textarea {
+    width: 100%;
+    min-height: 80px;
+    background-color: #343464;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 4px;
+    color: #f0f0f0;
+    resize: vertical;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  button {
+    background-color: #ff1493;
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-weight: bold;
+    padding: 12px 24px;
+    margin-top: 16px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #e0137d;
+  }
+  .output {
+    margin-top: 24px;
+    background-color: #343464;
+    padding: 12px;
+    border-radius: 8px;
+    min-height: 100px;
+    white-space: pre-line;
+    font-family: monospace;
+    font-size: 1rem;
+    color: #f0f0f0;
+  }
+</style>
+</head>
+<body>
+<header>PROMTIKA Generator</header>
+<nav>
+  <button id="genTab" class="active" aria-label="Генератор промтов">Генератор</button>
+  <button id="commTab" aria-label="Сообщество">Сообщество</button>
+  <button id="upTab" aria-label="Загрузить">Загрузить</button>
+</nav>
+<main>
+  <section id="generatorSection">
+    <label for="subjectSelect">Главный субъект</label>
+    <select id="subjectSelect">
+      <option value="портрет девушки">Портрет девушки</option>
+      <option value="мужчина в городе">Мужчина в городе</option>
+      <option value="собака">Собака</option>
+      <option value="цветы">Цветы</option>
+      <option value="автомобиль">Автомобиль</option>
+      <option value="абстракция">Абстракция</option>
+      <option value="животные">Животные</option>
+      <option value="природа">Природа</option>
+      <option value="фантастическое существо">Фантастическое существо</option>
+    </select>
+    <label for="styleSelect">Стиль</label>
+    <select id="styleSelect">
+      <option value="цифровая живопись">Цифровая живопись</option>
+      <option value="фотографический стиль">Фотографический стиль</option>
+      <option value="пиксель-арт">Пиксель-арт</option>
+      <option value="арт-коллаж">Арт-коллаж</option>
+      <option value="фэнтези">Фэнтези</option>
+      <option value="реализм">Реализм</option>
+      <option value="3D-моделирование">3D-моделирование</option>
+      <option value="упрощённая иллюстрация">Упрощённая иллюстрация</option>
+      <option value="графический дизайн">Графический дизайн</option>
+    </select>
+    <label for="environmentSelect">Окружение</label>
+    <select id="environmentSelect">
+      <option value="лес">Лес</option>
+      <option value="город">Город</option>
+      <option value="пляж">Пляж</option>
+      <option value="студия">Студия</option>
+      <option value="фантастический мир">Фантастический мир</option>
+      <option value="домашняя обстановка">Домашняя обстановка</option>
+      <option value="улица">Улица</option>
+      <option value="горы">Горы</option>
+      <option value="интерьер кафе">Интерьер кафе</option>
+    </select>
+    <label for="lightingSelect">Освещение</label>
+    <select id="lightingSelect">
+      <option value="золотой час">Золотой час</option>
+      <option value="студийный свет">Студийный свет</option>
+      <option value="дневной свет">Дневной свет</option>
+      <option value="неоновое освещение">Неоновое освещение</option>
+      <option value="мягкий рассеянный">Мягкий рассеянный</option>
+      <option value="сумерки">Сумерки</option>
+      <option value="контровой свет">Контровой свет</option>
+      <option value="зонтичный свет">Зонтичный свет</option>
+      <option value="естественное освещение">Естественное освещение</option>
+    </select>
+    <label for="moodSelect">Настроение</label>
+    <select id="moodSelect">
+      <option value="спокойное">Спокойное</option>
+      <option value="динамичное">Динамичное</option>
+      <option value="загадочное">Загадочное</option>
+      <option value="радостное">Радостное</option>
+      <option value="меланхоличное">Меланхоличное</option>
+      <option value="драматичное">Драматичное</option>
+      <option value="романтичное">Романтичное</option>
+      <option value="вдохновляющее">Вдохновляющее</option>
+    </select>
+    <label for="detailLevel">Детализация (1-10)</label>
+    <input type="number" id="detailLevel" min="1" max="10" value="8" />
+    <label for="qualitySelect">Качество</label>
+    <select id="qualitySelect">
+      <option value="HD">HD (высокое качество)</option>
+      <option value="SD">SD (стандартное)</option>
+      <option value="LQ">LQ (низкое)</option>
+    </select>
+    <label for="cameraSelect">Фотоаппарат/Объектив</label>
+    <select id="cameraSelect">
+      <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+      <option value="Canon RF 85mm">Canon RF 85mm</option>
+      <option value="Sony Alpha 7R IV">Sony Alpha 7R IV</option>
+      <option value="Nikon Z8">Nikon Z8</option>
+      <option value="Fujifilm X-T5">Fujifilm X-T5</option>
+      <option value="Leica SL2">Leica SL2</option>
+      <option value="Hasselblad X2D">Hasselblad X2D</option>
+      <option value="Samsung S24 Ultra">Samsung S24 Ultra</option>
+    </select>
+    <button id="generateBtn">Сгенерировать промт</button>
+    <div class="output" id="promptOutput"></div>
+  </section>
+  <section id="communitySection" style="display:none;">
+    <h2>Сообщество (в разработке)</h2>
+  </section>
+  <section id="uploadSection" style="display:none;">
+    <h2>Загрузить (в разработке)</h2>
+  </section>
+</main>
+<script>
+  // Навигация
+  const genTab = document.getElementById('genTab');
+  const commTab = document.getElementById('commTab');
+  const upTab = document.getElementById('upTab');
+  const generatorSection = document.getElementById('generatorSection');
+  const communitySection = document.getElementById('communitySection');
+  const uploadSection = document.getElementById('uploadSection');
+
+  genTab.addEventListener('click', () => {
+    genTab.classList.add('active');
+    commTab.classList.remove('active');
+    upTab.classList.remove('active');
+    generatorSection.style.display = '';
+    communitySection.style.display = 'none';
+    uploadSection.style.display = 'none';
+  });
+
+  commTab.addEventListener('click', () => {
+    genTab.classList.remove('active');
+    commTab.classList.add('active');
+    upTab.classList.remove('active');
+    generatorSection.style.display = 'none';
+    communitySection.style.display = '';
+    uploadSection.style.display = 'none';
+  });
+
+  upTab.addEventListener('click', () => {
+    genTab.classList.remove('active');
+    commTab.classList.remove('active');
+    upTab.classList.add('active');
+    generatorSection.style.display = 'none';
+    communitySection.style.display = 'none';
+    uploadSection.style.display = '';
+  });
+
+  // Генерация промта
+  const generateBtn = document.getElementById('generateBtn');
+  const promptOutput = document.getElementById('promptOutput');
+
+  generateBtn.addEventListener('click', () => {
+    const subject = document.getElementById('subjectSelect').value;
+    const style = document.getElementById('styleSelect').value;
+    const environment = document.getElementById('environmentSelect').value;
+    const lighting = document.getElementById('lightingSelect').value;
+    const mood = document.getElementById('moodSelect').value;
+    const detail = document.getElementById('detailLevel').value;
+    const quality = document.getElementById('qualitySelect').value;
+    const camera = document.getElementById('cameraSelect').value;
+
+    const prompt = \`Главный субъект: \${subject}\\nСтиль: \${style}\\nОкружение: \${environment}\\nОсвещение: \${lighting}\\nНастроение: \${mood}\\nДетализация: \${detail}\\nКачество: \${quality}\\nСнято на: \${camera}\`;
+    promptOutput.textContent = prompt;
+  });
+
+  // Автостарт на вкладке генератора
+  genTab.click();
+</script>
+</body>
+</html>
