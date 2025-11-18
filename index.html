@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PROMTIKA — генератор промтов</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #191d2e 0%, #4f327e 80%, #ff1493 100%);
+    color: #f0f0ff;
+  }
+  header {
+    text-align: center;
+    padding: 24px 8px 16px 8px;
+    background: transparent;
+  }
+  .channel-btn {
+    background: linear-gradient(90deg,#00d9ff,#ff1493);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-size: 1.15rem;
+    padding: 12px 28px;
+    font-weight: bold;
+    text-decoration: none;
+    box-shadow: 0 2px 12px #18142a22;
+    margin-bottom: 24px;
+    display: inline-block;
+    transition: background 0.2s;
+  }
+  .channel-btn:hover {opacity: 0.93;}
+  h1 {
+    font-size: 2rem;
+    margin: 0 0 6px 0;
+    letter-spacing: 0.05em;
+    color: #b484ff;
+    font-weight: 900;
+  }
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 24px 0;
+  }
+  nav button {
+    background: none;
+    border: none;
+    color: #aac8ff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 12px 12px 0 0;
+    cursor: pointer;
+    transition:color 0.2s;
+    border-bottom: 2.5px solid transparent;
+  }
+  nav button.active {
+    color: #ff1493;
+    border-bottom: 2.5px solid #00d9ff;
+    font-weight: 700;
+  }
+  main {
+    max-width: 430px;
+    margin: 0 auto;
+    padding: 0 8px 40px 8px;
+    background: none;
+  }
+  form {
+    background: #25253fdd;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px #22224020;
+  }
+  label {
+    margin: 16px 0 4px 0;
+    font-weight: bold;
+    color: #c1bde7;
+    font-size: 1.05rem;
+    display:block;
+  }
+  select, input[type="number"], input[type="file"] {
+    width: 100%; padding: 8px;
+    font-size: 1rem;
+    border-radius: 7px;
+    border: none;
+    background-color: #343464;
+    color: #f0f0f0;
+    margin-bottom:6px;
+    margin-top:3px;
+    font-family:inherit;
+  }
+  .result-block {
+    margin-top: 32px;
+    padding: 18px;
+    background: #2f2b45;
+    border-radius: 14px;
+    box-shadow: 0 2px 10px #2e185540;
+    position: relative;
+    word-break:break-word;
+  }
+  .copy-btn {
+    position:absolute;
+    top:10px; right:16px;
+    background:linear-gradient(90deg,#00d9ff 0%,#ff1493 100%);
+    border:none; color:#fff; padding:6px 12px;
+    border-radius: 19px;
+    font-size:0.95rem; font-weight:500;
+    cursor:pointer; transition:opacity 0.2s;
+  }
+  .copy-btn:active {opacity:0.8;}
+  .copied-msg {
+    position:absolute;
+    top:10px; left:16px;
+    font-size:0.9rem; color:#81e3d9; font-weight:600;
+    opacity:0.90;
+  }
+  /* Community promo cards */
+  .prompt-card {
+    background-color: #343464dd;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 8px #2e1a3a80;
+    color: #eaeaff;
+  }
+  .prompt-text {
+    margin-bottom: 6px;
+    font-size: 1rem;
+    min-height: 50px;
+  }
+  .like-btn {
+    background: linear-gradient(90deg,#ff1493,#00d9ff);
+    border: none;
+    border-radius: 16px;
+    padding: 6px 14px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+  }
+  .liked {
+    box-shadow: 0 0 10px 2px #ff1493;
+  }
+  .upload-form {
+    background: #25253fdd;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 2px 12px #22224020;
+  }
+</style>
+</head>
+<body>
+<header>
+  <a href="https://t.me/promtikaii" target="_blank" class="channel-btn">Подписаться на мой канал</a>
+  <h1>PROMTIKA</h1>
+  <div style="color:#ffa5ee; font-size:1rem;">Генератор промтов для Nana Banana</div>
+</header>
+<nav>
+  <button id="tabGen" class="active">Генератор</button>
+  <button id="tabComm">Сообщество</button>
+  <button id="tabUp">Загрузить</button>
+</nav>
+<main>
+  <section id="sectGen">
+    <form id="promptForm">
+      <label for="subject">Главный субъект</label>
+      <select id="subject">
+        <option value="портрет девушки">Портрет девушки</option>
+        <option value="мужчина">Мужчина</option>
+        <option value="семья">Семья</option>
+        <option value="животное">Животное</option>
+        <option value="природа">Природа</option>
+        <option value="автомобиль">Автомобиль</option>
+        <option value="фантастическое существо">Фантастическое существо</option>
+      </select>
+      <label for="style">Стиль</label>
+      <select id="style">
+        <option value="цифровая живопись">Цифровая живопись</option>
+        <option value="фотографический">Фотографический</option>
+        <option value="фэнтези">Фэнтези</option>
+        <option value="реализм">Реализм</option>
+        <option value="3D-моделирование">3D-моделирование</option>
+        <option value="арт-коллаж">Арт-коллаж</option>
+        <option value="пиксель-арт">Пиксель-арт</option>
+      </select>
+      <label for="environment">Окружение</label>
+      <select id="environment">
+        <option value="лес">Лес</option>
+        <option value="город">Город</option>
+        <option value="студия">Студия</option>
+        <option value="пейзаж">Пейзаж</option>
+        <option value="дом">Дом</option>
+        <option value="фантастический мир">Фантастический мир</option>
+      </select>
+      <label for="lighting">Освещение</label>
+      <select id="lighting">
+        <option value="мягкое рассеянное">Мягкое рассеянное</option>
+        <option value="золотой час">Золотой час</option>
+        <option value="студийное">Студийное</option>
+        <option value="сумерки">Сумерки</option>
+        <option value="неоновое">Неоновое</option>
+        <option value="дневное">Дневное</option>
+      </select>
+      <label for="mood">Настроение</label>
+      <select id="mood">
+        <option value="романтичное">Романтичное</option>
+        <option value="спокойное">Спокойное</option>
+        <option value="динамичное">Динамичное</option>
+        <option value="загадочное">Загадочное</option>
+        <option value="радостное">Радостное</option>
+        <option value="драматичное">Драматичное</option>
+      </select>
+      <label for="detail">Детализация (1-10)</label>
+      <input type="number" id="detail" min="1" max="10" value="8"/>
+      <label for="quality">Качество</label>
+      <select id="quality">
+        <option value="HD">HD (высокое)</option>
+        <option value="SD">SD (стандартное)</option>
+        <option value="LQ">LQ (низкое)</option>
+      </select>
+      <label for="camera">Фотоаппарат/объектив</label>
+      <select id="camera">
+        <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+        <option value="Canon RF 85mm">Canon RF 85mm</option>
+        <option value="Sony Alpha 7R IV">Sony Alpha 7R IV</option>
+        <option value="Nikon Z8">Nikon Z8</option>
+        <option value="Fujifilm X-T5">Fujifilm X-T5</option>
+        <option value="Leica SL2">Leica SL2</option>
+        <option value="Hasselblad X2D">Hasselblad X2D</option>
+        <option value="Samsung S24 Ultra">Samsung S24 Ultra</option>
+      </select>
+      <button type="submit" style="margin-top:18px;">Собрать промт</button>
+    </form>
+    <div id="resultBlock" class="result-block" style="display:none;">
+      <button class="copy-btn" id="copyBtn">📋 Копировать</button>
+      <span class="copied-msg" id="copiedMsg" style="display:none;">Скопировано!</span>
+      <div id="resultPrompt"></div>
+    </div>
+  </section>
+  <section id="sectComm" style="display:none;">
+    <div style="margin-bottom:12px;">
+      <input type="text" id="filterInput" placeholder="Фильтр промтов" style="width:100%;padding:8px;border-radius:8px;border:none;background:#343464;color:#f0f0f0;margin-top:0;margin-bottom:12px;font-size:1rem;">
+    </div>
+    <div id="promptsList">
+      <!-- Пример карты промта -->
+    </div>
+  </section>
+  <section id="sectUp" style="display:none;">
+    <form id="uploadForm" class="upload-form">
+      <label for="uploadPrompt">Ваш промт</label>
+      <textarea id="uploadPrompt" placeholder="Введите текст промта" required minlength="10" rows="4" style="resize:none;"></textarea>
+      <label for="uploadImage">Выберите изображение (необязательно)</label>
+      <input type="file" id="uploadImage" accept="image/*" />
+      <button type="submit" style="margin-top:12px;">Загрузить промт</button>
+      <div id="uploadMessage" style="color:#8ab8e0;margin-top:12px;"></div>
+    </form>
+  </section>
+</main>
+<script>
+  // Вкладки
+  function showTab(tab) {
+    ['tabGen','tabComm','tabUp'].forEach(id => document.getElementById(id).classList.remove('active'));
+    ['sectGen','sectComm','sectUp'].forEach(id => document.getElementById(id).style.display = 'none');
+    if(tab==='gen') {
+      document.getElementById('tabGen').classList.add('active');
+      document.getElementById('sectGen').style.display = '';
+    } else if(tab==='comm') {
+      document.getElementById('tabComm').classList.add('active');
+      document.getElementById('sectComm').style.display = '';
+      filterPrompts();
+    } else if(tab==='up') {
+      document.getElementById('tabUp').classList.add('active');
+      document.getElementById('sectUp').style.display = '';
+    }
+  }
+  document.getElementById('tabGen').onclick = () => showTab('gen');
+  document.getElementById('tabComm').onclick = () => showTab('comm');
+  document.getElementById('tabUp').onclick = () => showTab('up');
+  showTab('gen');
+
+  // Генератор промта
+  document.getElementById('promptForm').onsubmit = function(e) {
+    e.preventDefault();
+    const subject = document.getElementById('subject').value;
+    const style = document.getElementById('style').value;
+    const environment = document.getElementById('environment').value;
+    const lighting = document.getElementById('lighting').value;
+    const mood = document.getElementById('mood').value;
+    const detail = document.getElementById('detail').value;
+    const quality = document.getElementById('quality').value;
+    const camera = document.getElementById('camera').value;
+
+    const prompt = `[translate:${subject} в окружении "${environment}", стиль — ${style}, освещение — ${lighting}, настроение — ${mood}. Детализация: высокая (${detail}/10), качество: ${quality}. Снято на ${camera}.]`;
+
+    const block = document.getElementById('resultBlock');
+    const resultPrompt = document.getElementById('resultPrompt');
+    resultPrompt.innerHTML = prompt;
+    block.style.display = 'block';
+    document.getElementById('copiedMsg').style.display = 'none';
+  };
+
+  // Копирование промта
+  document.getElementById('copyBtn').onclick = function() {
+    const text = document.getElementById('resultPrompt').textContent;
+    navigator.clipboard.writeText(text)
+      .then(() => {
+        const msg = document.getElementById('copiedMsg');
+        msg.style.display = 'inline';
+        setTimeout(() => { msg.style.display = 'none'; }, 1500);
+      })
+      .catch(() => alert('Ошибка копирования'));
+  };
+
+  // Сообщество: примеры промтов с лайками
+  const prompts = [
+    {id:1, text: 'Портрет девушки в лесу, цифровая живопись, мягкое освещение, романтичное настроение, детализация 8, HD, снято на iPhone 15 Pro', likes: 5},
+    {id:2, text: 'Мужчина в городской студии, реализм, студийный свет, динамичное настроение, детализация 7, SD, снято на Canon RF 85mm', likes: 3},
+    {id:3, text: 'Животное в пейзаже, фэнтези, золотой час, спокойное настроение, детализация 9, HD, снято на Nikon Z8', likes: 4}
+  ];
+
+  const promptsList = document.getElementById('promptsList');
+
+  function renderPrompts(promptsArray) {
+    promptsList.innerHTML = '';
+    promptsArray.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'prompt-card';
+      const promptText = document.createElement('div');
+      promptText.className = 'prompt-text';
+      promptText.textContent = p.text;
+      const likeBtn = document.createElement('button');
+      likeBtn.className = 'like-btn';
+      likeBtn.textContent = `❤️ ${p.likes}`;
+      likeBtn.onclick = () => {
+        if(!likeBtn.classList.contains('liked')) {
+          p.likes++;
+          likeBtn.textContent = `❤️ ${p.likes}`;
+          likeBtn.classList.add('liked');
+        }
+      };
+      card.appendChild(promptText);
+      card.appendChild(likeBtn);
+      promptsList.appendChild(card);
+    });
+  }
+
+  // Фильтр в сообществе
+  document.getElementById('filterInput').addEventListener('input', function() {
+    filterPrompts();
+  });
+
+  function filterPrompts() {
+    const filterText = document.getElementById('filterInput').value.toLowerCase();
+    const filtered = prompts.filter(p => p.text.toLowerCase().includes(filterText));
+    renderPrompts(filtered);
+  }
+
+  renderPrompts(prompts);
+
+  // Загрузка промта (имитация)
+  document.getElementById('uploadForm').onsubmit = function(e) {
+    e.preventDefault();
+    const txt = document.getElementById('uploadPrompt').value.trim();
+    if(txt.length < 10) {
+      document.getElementById('uploadMessage').textContent = 'Промт слишком короткий.';
+      return;
+    }
+    document.getElementById('uploadMessage').textContent = '[translate:Промт успешно загружен!]';
+    document.getElementById('uploadPrompt').value = '';
+    document.getElementById('uploadImage').value = '';
+  };
+</script>
+</body>
+</html>
